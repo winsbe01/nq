@@ -96,12 +96,17 @@ class PlayerManager:
         self.read_config()
         self.spotipy = self.spotify_authorize()
 
+    def write_queue(self, queue):
+        with open(self.queuefile, 'w') as fil:
+            fil.writelines(queue)
+
     def get_queue(self):
-        out = []
         with open(self.queuefile, 'r') as fil:
-            for line in fil:
-                out.append(line.strip('\n').split(maxsplit=1))
-        return out
+            lines = fil.readlines()
+        if not lines:
+            return None
+        ret = lines.pop(0).strip('\n').split(maxsplit=1)
+        return ret, lines
 
     def read_config(self):
         config = configparser.ConfigParser()
@@ -142,17 +147,27 @@ class PlayerManager:
         self.player.stop()
 
     def run(self):
-        while len(self.get_queue()) > 0:
-            next_track = self.get_queue().pop(0)
-            if next_track[0] == "LOCAL":
-                self.player = LocalPlayer(next_track[1])
-            elif next_track[0] == "SPOTIFY":
-                self.player = SpotifyPlayer(next_track[1], self.spotipy, self.spotify_device)
+        next_track, queue = self.get_queue()
+        while next_track != None:
+            #next_track = self.pop_queue()
+            # write queue
+            self.write_queue(queue)
+            print(next_track)
+            if next_track is not None:
+                if next_track[0] == "LOCAL":
+                    self.player = LocalPlayer(next_track[1])
+                elif next_track[0] == "SPOTIFY":
+                    self.player = SpotifyPlayer(next_track[1], self.spotipy, self.spotify_device)
+                else:
+                    raise Exception("bad track type!")
+                p = Thread(target=self.player.play())
+                p.start()
+                p.join()
+
+                # get next song
+                next_track, queue = self.get_queue()
             else:
-                raise Exception("bad track type!")
-            p = Thread(target=self.player.play())
-            p.start()
-            p.join()
+                break
 
 
 if __name__ == "__main__":
