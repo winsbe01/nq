@@ -160,6 +160,8 @@ if __name__ == "__main__":
     PORT = 55555
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         pm = PlayerManager()
+        playing = False
+        started = False
         s.bind((HOST,PORT))
         s.listen(1)
         while(True):
@@ -171,10 +173,15 @@ if __name__ == "__main__":
                 str_data = data.decode("utf-8").strip('\n')
                 sd_split = str_data.split(' ')
                 if sd_split[0] == 'play':
-                    Thread(target=pm.run).start()
+                    if not started and not playing:
+                        Thread(target=pm.run).start()
+                        playing = True
+                        started = True
                 elif sd_split[0] == 'toggle':
-                    pm.toggle()
+                    if started:
+                        pm.toggle()
                 elif sd_split[0] == 'next':
-                    pm.next()
+                    if started:
+                        pm.next()
                 else:
                     conn.sendall(b"unknown: " + data)
