@@ -93,9 +93,15 @@ class SpotifyPlayer(Player):
 class PlayerManager:
     
     def __init__(self):
-        self.queue = []  # this is where the songs go
         self.read_config()
         self.spotipy = self.spotify_authorize()
+
+    def get_queue(self):
+        out = []
+        with open(self.queuefile, 'r') as fil:
+            for line in fil:
+                out.append(line.strip('\n').split(maxsplit=1))
+        return out
 
     def read_config(self):
         config = configparser.ConfigParser()
@@ -106,6 +112,9 @@ class PlayerManager:
         self.spotify_client_id = config['spotify']['client_id']
         self.spotify_client_secret = config['spotify']['client_secret']
         self.spotify_device = config['spotify']['device']
+
+        # get general stuff
+        self.queuefile = Path(config['general']['queuefile']).expanduser()
 
         self.spotify_scopes = 'user-library-read user-read-currently-playing user-modify-playback-state'
         self.spotify_redirect_url = 'https://localhost'
@@ -133,8 +142,8 @@ class PlayerManager:
         self.player.stop()
 
     def run(self):
-        while len(self.queue) > 0:
-            next_track = self.queue.pop(0)
+        while len(self.get_queue()) > 0:
+            next_track = self.get_queue().pop(0)
             if next_track[0] == "LOCAL":
                 self.player = LocalPlayer(next_track[1])
             elif next_track[0] == "SPOTIFY":
