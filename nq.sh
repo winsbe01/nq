@@ -36,7 +36,7 @@ case "$1" in
         toggle
         ;;
     search)
-        search $2
+        search "$2"
         ;;
     add)
         add
