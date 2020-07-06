@@ -7,6 +7,10 @@ play() {
     echo "play" | nc localhost 55555
 }
 
+pause() {
+    echo "pause" | nc localhost 55555
+}
+
 toggle() {
     echo "toggle" | nc localhost 55555
 }
