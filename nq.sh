@@ -33,8 +33,24 @@ search() {
             for artist in $artist_list; do
                 grep "$artist" $all_tracks | awk -F';;' '{ print substr($1,1,8) "  " $4 "/" $3 "/" $5 " - " $6 }' | sort -k 2
             done
-	    unset IFS
+			unset IFS
 	    ;;
+        album)
+    	    album_list=`cat $all_tracks | awk -F';;' '{ print ";;" $3 ";;" }' | sort | uniq | grep -i "$2"`
+            IFS=$'\n'
+            for album in $album_list; do
+                grep "$album" $all_tracks | awk -F';;' '{ print substr($1,1,8) "  " $4 "/" $3 "/" $5 " - " $6 }' | sort -k 2
+            done
+			unset IFS
+		;;
+        title)
+    	    title_list=`cat $all_tracks | awk -F';;' '{ print ";;" $6 }' | sort | uniq | grep -i "$2"`
+            IFS=$'\n'
+            for title in $title_list; do
+                grep "$title" $all_tracks | awk -F';;' '{ print substr($1,1,8) "  " $4 "/" $3 "/" $5 " - " $6 }' | sort -k 2
+            done
+			unset IFS
+		;;
         *)
             printf %s\\n "not recognized"
 	    ;;
