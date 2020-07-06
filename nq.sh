@@ -65,6 +65,9 @@ case "$1" in
     play)
         play
         ;;
+    pause)
+        pause
+        ;;
     next)
         next
         ;;
