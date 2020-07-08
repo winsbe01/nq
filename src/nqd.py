@@ -19,6 +19,9 @@ class NqHandler(socketserver.StreamRequestHandler):
 		elif str_data == "spotify_refresh":
 			Thread(target=mgr.refresh_spotify_library).start()
 			self.wfile.write(b"spotify refresh started...\n")
+		elif str_data == "local_refresh":
+			Thread(target=mgr.refresh_local_library).start()
+			self.wfile.write(b"local refresh started...\n")
 		else:
 			print("unrecognized command: " + str_data)
 

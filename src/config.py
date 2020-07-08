@@ -19,5 +19,6 @@ class NqConfig:
 		self.spotify_redirect_url = 'https://localhost'
 
 		# get general stuff
+		self.local_library = Path(config['general']['local_library']).expanduser()
 		self.queuefile = Path(config['general']['queuefile']).expanduser()
 

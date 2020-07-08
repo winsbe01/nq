@@ -5,6 +5,7 @@ from threading import Thread
 from config import NqConfig
 from player import SongStatus
 from local_player import LocalPlayer
+from local_library import LocalLibrary
 from spotify_player import SpotifyPlayer
 from spotify_library import SpotifyLibrary
 
@@ -54,6 +55,10 @@ class NqManager:
 	def refresh_spotify_library(self):
 		fmt = "{0};;{1};;{2};;{3};;{4};;{5}\n"
 		SpotifyLibrary(self.spotipy, fmt)
+
+	def refresh_local_library(self):
+		fmt = "{0};;{1};;{2};;{3};;{4};;{5}\n"
+		LocalLibrary(fmt, self.config.local_library)
 
 	def pause(self):
 		self.player.stop()
