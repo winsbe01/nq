@@ -20,14 +20,26 @@ on the same playlist.
 - a Spotify player -- either the full player (ew) or [spotifyd](https://github.com/Spotifyd/spotifyd)
 
 ## install
-coming soon
+(eventually, this will be a Makefile)
+- install the requirements using pip
+- copy *server.config* into ~/.config/nq/
+- create an app on [your Spotify dashboard](https://developer.spotify.com/dashboard/)
+- populate the client info into the *server.config*
+- start *src/nqd.py*. on your first run, you will be prompted to log in to Spotify. this will be the server, you can fork this to bg.
+- use the *nq.sh* script to control the player
 
-## setup
-coming soon
+## usage
+- *nq.sh refresh spotify* - populate your Spotify saved tracks
+- *nq.sh refresh local* - populate your local library
+- *nq.sh search <artist|album|title> <search term>* - search your library
+- *nq.sh add* - pipe results of search into this to add to the queue
+- *nq.sh <play|pause>* - play/pause the song
 
 ## TODO
 - volume discrepancy between local/Spotify (this might be a mac/portaudio issue)
-- Spotify craps out when it hasn't heard from the API in awhile
+- Spotify craps out when it hasn't heard from the API in awhile?
+- get Spotify device ID
+- prev?
 - fix Spotify pause issue
 - commands for status and current queue
 - more id3 tags (year? track length?)
