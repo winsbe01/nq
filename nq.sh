@@ -25,6 +25,18 @@ add() {
     done
 }
 
+refresh() {
+	case "$1" in
+		spotify)
+			echo "spotify_refresh" | nc localhost 55555
+			;;
+		*)
+			echo "unknown library: $1"
+			;;
+	esac
+			
+}
+
 search() {
     if [[ -z "$2" ]]; then
         printf %s\\n "missing a search term!"
@@ -74,6 +86,9 @@ case "$1" in
     toggle)
         toggle
         ;;
+	refresh)
+		refresh "$2"
+		;;
     search)
         search "$2" "$3"
         ;;

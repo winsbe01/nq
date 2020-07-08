@@ -6,6 +6,7 @@ from config import NqConfig
 from player import SongStatus
 from local_player import LocalPlayer
 from spotify_player import SpotifyPlayer
+from spotify_library import SpotifyLibrary
 
 
 class NqManager:
@@ -49,6 +50,10 @@ class NqManager:
 		else:
 			print("no token :(")
 			return None
+
+	def refresh_spotify_library(self):
+		fmt = "{0};;{1};;{2};;{3};;{4};;{5}\n"
+		SpotifyLibrary(self.spotipy, fmt)
 
 	def pause(self):
 		self.player.stop()
