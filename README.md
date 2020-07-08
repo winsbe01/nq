@@ -2,11 +2,11 @@
 a scrappy music player for mp3s and Spotify
 
 ## goals
-- *simple* -> support only the features I want/need, which is a tiny subset of most music players
-- *unix-y* -> libraries are just text files, commands support UNIX pipeline, controller is POSIX
-- *server/client* -> a music player need not take up a whole window all the time
-- *minimal requirements* -> don't make me download half the internet
-- *fast* -> commands should be nearly instantaneous
+- **simple** -> support only the features I want/need, which is a tiny subset of most music players
+- **unix-y** -> libraries are just text files, commands support UNIX pipeline, controller is POSIX
+- **server/client** -> a music player need not take up a whole window all the time
+- **minimal requirements** -> don't make me download half the internet
+- **fast** -> commands should be nearly instantaneous
 
 ## isn't this just mpd/mpc?
 mpc is great, and was an inspiration for much of the commands. It doesn't integrate with
