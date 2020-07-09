@@ -59,6 +59,10 @@ print_track() {
     awk -F';;' '{ print substr($1,1,8) "  " $4 "/" $3 "/" $5 " - " $6 }'
 }
 
+listall() {
+	cat $all_tracks | print_track | sort -k 2
+}
+
 search() {
     if [[ -z "$2" ]]; then
         printf %s\\n "missing a search term!"
@@ -125,6 +129,9 @@ case "$1" in
 		;;
 	clear)
 		clr
+		;;
+	listall)
+		listall
 		;;
     *)
         printf %s\\n "not recognized"
