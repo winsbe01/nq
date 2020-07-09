@@ -51,6 +51,10 @@ playlist() {
 	done < $queue
 }
 
+clr() {
+	> $queue
+}
+
 print_track() {
     awk -F';;' '{ print substr($1,1,8) "  " $4 "/" $3 "/" $5 " - " $6 }'
 }
@@ -118,6 +122,9 @@ case "$1" in
         ;;
 	playlist)
 		playlist
+		;;
+	clear)
+		clr
 		;;
     *)
         printf %s\\n "not recognized"
