@@ -18,6 +18,9 @@ class LocalPlayer(Player):
 			if self.stopped:
 				status.name = "stopped"
 				break
+			elif self.skipped:
+				status.name = "skipped"
+				break
 			try:
 				self.mpgout.play(next(self.frames))
 			except StopIteration:

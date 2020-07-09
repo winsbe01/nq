@@ -31,7 +31,7 @@ class NqManager:
 			print(lines)
 		if not lines:
 			return None
-		ret = lines.pop(0).strip('\n').split(maxsplit=1)
+		ret = lines.pop(0).strip('\n').split(';;')
 		return ret, lines
 
 	def spotify_authorize(self):
@@ -60,8 +60,15 @@ class NqManager:
 		fmt = "{0};;{1};;{2};;{3};;{4};;{5}\n"
 		LocalLibrary(fmt, self.config.local_library)
 
+	def status(self):
+		return self.current_track
+
 	def pause(self):
 		self.player.stop()
+		self.is_playing = False
+
+	def next(self):
+		self.player.skip()
 		self.is_playing = False
 	
 	def play(self):
@@ -73,10 +80,10 @@ class NqManager:
 			self.write_queue(self.queue)
 		while True:
 			if self.player is None:
-				if self.current_track[0] == "LOCAL":
-					self.player = LocalPlayer(self.current_track[1])
-				elif self.current_track[0] == "SPOTIFY":
-					self.player = SpotifyPlayer(self.current_track[1], self.spotipy, self.config.spotify_device)
+				if self.current_track[1] == "LOCAL":
+					self.player = LocalPlayer(self.current_track[2])
+				elif self.current_track[1] == "SPOTIFY":
+					self.player = SpotifyPlayer(self.current_track[2], self.spotipy, self.config.spotify_device)
 				else:
 					raise Exception("bad track type!")
 
@@ -86,10 +93,10 @@ class NqManager:
 			pthread.start()
 			pthread.join()
 		
-			if status.name != "done":
+			if status.name == "stopped":
 				self.is_playing = False
 				break
-			else:
+			elif status.name in ("skipped", "done"):
 				self.current_track, self.queue = self.get_queue()
 				self.write_queue(self.queue)
 				self.player = None

@@ -28,6 +28,10 @@ class SpotifyPlayer(Player):
 				self.remaining_ms = self.remaining_ms - self.cur_ms
 				status.name = "stopped"
 				break
+			elif self.skipped:
+				self.sp.next_track()
+				status.name = "skipped"
+				break
 			elif self.end_time < self.get_system_ms():
 				if not self.sp.currently_playing()['is_playing']:
 					status.name = "done"

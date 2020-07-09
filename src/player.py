@@ -11,12 +11,16 @@ class Player:
 	def __init__(self, loc):
 		self.loc = loc
 		self.stopped = False
+		self.skipped = False
 	
 	def stop(self):
 		self.stopped = True
 
 	def reset(self):
 		self.stopped = False
+
+	def skip(self):
+		self.skipped = True
 
 	def play(self, status):
 		pass

@@ -21,7 +21,7 @@ next() {
 
 add() {
     while read line; do
-        grep "^`echo $line | cut -d ' ' -f 1`" $all_ids | awk -F';;' '{ print $2 " " $3 }' >> $queue
+        grep -h "^`echo $line | cut -d ' ' -f 1`" $all_ids >> $queue
     done
 }
 
@@ -38,6 +38,17 @@ refresh() {
 			;;
 	esac
 			
+}
+
+stat() {
+    song_id=`echo "status" | nc localhost 55555`
+	grep -h $song_id $all_tracks | print_track
+}
+
+playlist() {
+	while read line; do
+		grep -h `echo $line | cut -d ';' -f 1` $all_tracks | print_track
+	done < $queue
 }
 
 print_track() {
@@ -81,6 +92,9 @@ search() {
 }
 
 case "$1" in
+	"")
+		stat
+		;;
     play)
         play
         ;;
@@ -102,6 +116,9 @@ case "$1" in
     add)
         add
         ;;
+	playlist)
+		playlist
+		;;
     *)
         printf %s\\n "not recognized"
         ;;
