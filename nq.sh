@@ -40,6 +40,10 @@ refresh() {
 			
 }
 
+print_track() {
+    awk -F';;' '{ print substr($1,1,8) "  " $4 "/" $3 "/" $5 " - " $6 }'
+}
+
 search() {
     if [[ -z "$2" ]]; then
         printf %s\\n "missing a search term!"
@@ -50,7 +54,7 @@ search() {
     	    artist_list=`cat $all_tracks | awk -F';;' '{ print ";;" $4 ";;" }' | sort | uniq | grep -i "$2"`
             IFS=$'\n'
             for artist in $artist_list; do
-                grep -h "$artist" $all_tracks | awk -F';;' '{ print substr($1,1,8) "  " $4 "/" $3 "/" $5 " - " $6 }' | sort -k 2
+                grep -h "$artist" $all_tracks | print_track | sort -k 2
             done
 			unset IFS
 	    ;;
@@ -58,7 +62,7 @@ search() {
     	    album_list=`cat $all_tracks | awk -F';;' '{ print ";;" $3 ";;" }' | sort | uniq | grep -i "$2"`
             IFS=$'\n'
             for album in $album_list; do
-                grep -h "$album" $all_tracks | awk -F';;' '{ print substr($1,1,8) "  " $4 "/" $3 "/" $5 " - " $6 }' | sort -k 2
+                grep -h "$album" $all_tracks | print_track | sort -k 2
             done
 			unset IFS
 		;;
@@ -66,7 +70,7 @@ search() {
     	    title_list=`cat $all_tracks | awk -F';;' '{ print ";;" $6 }' | sort | uniq | grep -i "$2"`
             IFS=$'\n'
             for title in $title_list; do
-                grep -h "$title" $all_tracks | awk -F';;' '{ print substr($1,1,8) "  " $4 "/" $3 "/" $5 " - " $6 }' | sort -k 2
+                grep -h "$title" $all_tracks | print_track | sort -k 2
             done
 			unset IFS
 		;;
