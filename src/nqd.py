@@ -15,7 +15,10 @@ class NqHandler(socketserver.StreamRequestHandler):
 			mgr.next()
 			Thread(target=mgr.play).start()
 		elif str_data == "toggle":
-			mgr.toggle()
+			if mgr.is_playing:
+				mgr.pause()
+			else:
+				Thread(target=mgr.play).start()
 		elif str_data == "spotify_refresh":
 			Thread(target=mgr.refresh_spotify_library).start()
 			self.wfile.write(b"spotify refresh started...\n")
@@ -23,7 +26,7 @@ class NqHandler(socketserver.StreamRequestHandler):
 			Thread(target=mgr.refresh_local_library).start()
 			self.wfile.write(b"local refresh started...\n")
 		else:
-			print("unrecognized command: " + str_data)
+			self.wfile.write("unrecognized command: {}\n".format(str_data).encode())
 
 
 if __name__ == "__main__":

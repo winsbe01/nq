@@ -62,17 +62,17 @@ class NqManager:
 
 	def pause(self):
 		self.player.stop()
+		self.is_playing = False
 	
 	def play(self):
 		#self.next_track, queue = self.get_queue()
+		self.is_playing = True
+
 		if self.current_track is None:
 			self.current_track, self.queue = self.get_queue()
 			self.write_queue(self.queue)
 		while True:
-			#self.write_queue(queue)
-
 			if self.player is None:
-				print("player is None")
 				if self.current_track[0] == "LOCAL":
 					self.player = LocalPlayer(self.current_track[1])
 				elif self.current_track[0] == "SPOTIFY":
@@ -87,6 +87,7 @@ class NqManager:
 			pthread.join()
 		
 			if status.name != "done":
+				self.is_playing = False
 				break
 			else:
 				self.current_track, self.queue = self.get_queue()
