@@ -9,9 +9,9 @@ class LocalPlayer(Player):
 		self.setup_mp3()
 
 	def setup_mp3(self):
-		mp3 = Mpg123(self.loc)
+		self.mp3 = Mpg123(self.loc)
 		self.mpgout = Out123()
-		self.frames = mp3.iter_frames(self.mpgout.start)
+		self.frames = self.mp3.iter_frames(self.mpgout.start)
 
 	def play(self, status):
 		while True:
@@ -23,6 +23,9 @@ class LocalPlayer(Player):
 				break
 			try:
 				self.mpgout.play(next(self.frames))
+			except self.mp3.DecodeException as de:
+				print(str(de))
+				pass
 			except StopIteration:
 				self.stopped = True
 				status.name = "done"
