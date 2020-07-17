@@ -37,4 +37,4 @@ class LocalLibrary:
                                         str(tag.track_num[0]).zfill(2),
                                         tag.title))
                     else:
-                        tracks_fil.write(self.format_string.format(f,"","","","",""))
+                        tracks_fil.write(self.format_string.format(id_record[0],"","","","",""))
