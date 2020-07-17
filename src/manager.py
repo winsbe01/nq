@@ -65,11 +65,9 @@ class NqManager:
 
 	def pause(self):
 		self.player.stop()
-		self.is_playing = False
 
 	def next(self):
 		self.player.skip()
-		self.is_playing = False
 	
 	def play(self):
 		#self.next_track, queue = self.get_queue()
@@ -78,6 +76,7 @@ class NqManager:
 		if self.current_track is None:
 			self.current_track, self.queue = self.get_queue()
 			self.write_queue(self.queue)
+
 		while True:
 			if self.player is None:
 				if self.current_track[1] == "LOCAL":

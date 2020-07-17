@@ -13,7 +13,8 @@ class NqHandler(socketserver.StreamRequestHandler):
 			mgr.pause()
 		elif str_data == "next":
 			mgr.next()
-			Thread(target=mgr.play).start()
+			if not mgr.is_playing:
+				Thread(target=mgr.play).start()
 		elif str_data == "toggle":
 			if mgr.is_playing:
 				mgr.pause()
