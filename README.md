@@ -37,9 +37,14 @@ on the same playlist.
 
 ## TODO
 - volume discrepancy between local/Spotify (this might be a mac/portaudio issue)
-- Spotify craps out when it hasn't heard from the API in awhile?
+- manage the Spotify token properly
 - get Spotify device ID
 - prev?
-- fix Spotify pause issue
-- commands for status and current queue
+- ~fix Spotify pause issue~
+- ~commands for status and current queue~
 - more id3 tags (year? track length?)
+- log everything
+- makefile
+- edit the queue
+- add to front of queue?
+- incremental refresh
