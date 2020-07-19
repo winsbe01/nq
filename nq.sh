@@ -45,10 +45,30 @@ stat() {
 	grep -h $song_id $all_tracks | print_track
 }
 
-playlist() {
+read_queue() {
 	while read line; do
 		grep -h `echo $line | cut -d ';' -f 1` $all_tracks | print_track
 	done < $queue
+}
+
+playlist() {
+	case "$1" in
+		"")
+			read_queue
+			;;
+		edit)
+			tmpfile=$(mktemp)
+			read_queue > $tmpfile
+			"${EDITOR:-nano}" $tmpfile
+			clr
+			cat "$tmpfile" | add
+			echo "queue updated!"
+			rm "$tmpfile"
+			;;
+		*)
+			echo "unknown playlist command: '$1'"
+			;;
+		esac
 }
 
 clr() {
@@ -125,7 +145,7 @@ case "$1" in
         add
         ;;
 	playlist)
-		playlist
+		playlist "$2"
 		;;
 	clear)
 		clr
