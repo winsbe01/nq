@@ -76,7 +76,7 @@ clr() {
 }
 
 print_track() {
-    awk -F';;' '{ print substr($1,1,8) "  " $4 "/" $3 "/" $5 " - " $6 }'
+    awk -F';;' '{ print substr($1,1,8) "  " $2 "/" $3 "/" $4 " - " $5 }'
 }
 
 listall() {
@@ -90,7 +90,7 @@ search() {
     fi
     case "$1" in
         artist)
-    	    artist_list=`cat $all_tracks | awk -F';;' '{ print ";;" $4 ";;" }' | sort | uniq | grep -i "$2"`
+    	    artist_list=`cat $all_tracks | awk -F';;' '{ print ";;" $2 ";;" }' | sort | uniq | grep -i "$2"`
             IFS=$'\n'
             for artist in $artist_list; do
                 grep -h "$artist" $all_tracks | print_track | sort -k 2
@@ -106,7 +106,7 @@ search() {
 			unset IFS
 		;;
         title)
-    	    title_list=`cat $all_tracks | awk -F';;' '{ print ";;" $6 }' | sort | uniq | grep -i "$2"`
+    	    title_list=`cat $all_tracks | awk -F';;' '{ print ";;" $5 }' | sort | uniq | grep -i "$2"`
             IFS=$'\n'
             for title in $title_list; do
                 grep -h "$title" $all_tracks | print_track | sort -k 2

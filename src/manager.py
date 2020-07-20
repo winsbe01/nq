@@ -53,11 +53,11 @@ class NqManager:
 			return None
 
 	def refresh_spotify_library(self):
-		fmt = "{0};;{1};;{2};;{3};;{4};;{5}\n"
+		fmt = "{0};;{1};;{2};;{3};;{4}\n"
 		SpotifyLibrary(self.spotipy, fmt)
 
 	def refresh_local_library(self):
-		fmt = "{0};;{1};;{2};;{3};;{4};;{5}\n"
+		fmt = "{0};;{1};;{2};;{3};;{4}\n"
 		LocalLibrary(fmt, self.config.local_library)
 
 	def status(self):

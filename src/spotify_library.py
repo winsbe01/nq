@@ -40,9 +40,8 @@ class SpotifyLibrary:
                 fil.write("{};;SPOTIFY;;{}\n".format(tid, uri))
             with open(self.spotify_tracks_file, 'a') as fil:
                 fil.write(self.format_string.format(tid,
-                        t['track']['artists'][0]['name'],
-                        t['track']['album']['name'],
                         t['track']['album']['artists'][0]['name'],
+                        t['track']['album']['name'],
                         str(t['track']['track_number']).zfill(2),
                         t['track']['name']))
 
