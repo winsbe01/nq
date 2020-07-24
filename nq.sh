@@ -111,13 +111,13 @@ _inner_search() {
 	# do the search, then recurse with the rest of the arguments
 	case "$typ" in
 		artist)
-			cat | _artist_search "$term" | cut -d ';' -f 1 | grep -h -f - $all_tracks | _inner_search "$@"
+			cat | _artist_search "$term" | cut -d ';' -f 1 | grep -h -f /dev/stdin $all_tracks | _inner_search "$@"
 		;;
 		album)
-			cat | _album_search "$term" | cut -d ';' -f 1 | grep -h -f - $all_tracks | _inner_search "$@"
+			cat | _album_search "$term" | cut -d ';' -f 1 | grep -h -f /dev/stdin $all_tracks | _inner_search "$@"
 		;;
 		title)
-			cat | _title_search "$term" | cut -d ';' -f 1 | grep -h -f - $all_tracks | _inner_search "$@"
+			cat | _title_search "$term" | cut -d ';' -f 1 | grep -h -f /dev/stdin $all_tracks | _inner_search "$@"
 		;;
 		*)
 			printf %s\\n "not recognized: '$typ'"
@@ -138,7 +138,6 @@ search() {
 		return 1
     fi
 		
-	# TODO we need to get the input instead of $all_tracks (if available)
 	cat $all_tracks | _inner_search "$@"
 }
 
