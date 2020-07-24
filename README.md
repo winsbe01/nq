@@ -45,6 +45,6 @@ on the same playlist.
 - more id3 tags (year? track length?)
 - log everything
 - makefile
-- edit the queue
-- add to front of queue?
+- ~edit the queue~
+- ~add to front of queue?~
 - incremental refresh
