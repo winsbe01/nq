@@ -25,6 +25,15 @@ add() {
     done
 }
 
+addf() {
+	tmpfile=$(mktemp)
+	cp $queue $tmpfile
+	clr
+	cat | add
+	cat $tmpfile | add
+	rm "$tmpfile"
+}
+
 refresh() {
 	case "$1" in
 		spotify)
@@ -182,6 +191,9 @@ case "$1" in
 		;;
 	shadd)
 		shadd
+		;;
+	addf)
+		addf
 		;;
     *)
         printf %s\\n "not recognized"
