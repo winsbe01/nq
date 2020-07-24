@@ -83,40 +83,63 @@ listall() {
 	cat $all_tracks | print_track | sort -k 2
 }
 
+_artist_search() {
+	cat | awk -F';;' '{ print substr($1,1,8) ";;" $2 ";;" }' | grep -i "$1"
+}
+
+_album_search() {
+	cat | awk -F';;' '{ print substr($1,1,8) ";;" $3 ";;" }' | grep -i "$1"
+}
+
+_title_search() {
+	cat | awk -F';;' '{ print substr($1,1,8) ";;" $5 ";;" }' | grep -i "$1"
+}
+
+_inner_search() {
+
+	# if we have no more arguments, pretty print and return
+	if [[ $# -eq 0 ]]; then
+		cat | print_track | sort -k 2
+		return 0
+	fi
+
+	# grab the first two arguments, then shift
+	typ="$1"
+	term="$2"
+	shift 2
+
+	# do the search, then recurse with the rest of the arguments
+	case "$typ" in
+		artist)
+			cat | _artist_search "$term" | cut -d ';' -f 1 | grep -h -f - $all_tracks | _inner_search "$@"
+		;;
+		album)
+			cat | _album_search "$term" | cut -d ';' -f 1 | grep -h -f - $all_tracks | _inner_search "$@"
+		;;
+		title)
+			cat | _title_search "$term" | cut -d ';' -f 1 | grep -h -f - $all_tracks | _inner_search "$@"
+		;;
+		*)
+			printf %s\\n "not recognized: '$typ'"
+		;;
+	esac 
+}
+
 search() {
-    if [[ -z "$2" ]]; then
+
+	
+
+	# make sure we have an even number of arguments (not 0)
+	if [ $# -eq 0 ]; then
+		printf %s\\n "usage: nq search <artist|album|title> <search term> [...]"
+		return 1
+	elif (( $# % 2 )); then
         printf %s\\n "missing a search term!"
-	return 1
+		return 1
     fi
-    case "$1" in
-        artist)
-    	    artist_list=`cat $all_tracks | awk -F';;' '{ print ";;" $2 ";;" }' | sort | uniq | grep -i "$2"`
-            IFS=$'\n'
-            for artist in $artist_list; do
-                grep -h "$artist" $all_tracks | print_track | sort -k 2
-            done
-			unset IFS
-	    ;;
-        album)
-    	    album_list=`cat $all_tracks | awk -F';;' '{ print ";;" $3 ";;" }' | sort | uniq | grep -i "$2"`
-            IFS=$'\n'
-            for album in $album_list; do
-                grep -h "$album" $all_tracks | print_track | sort -k 2
-            done
-			unset IFS
-		;;
-        title)
-    	    title_list=`cat $all_tracks | awk -F';;' '{ print ";;" $5 }' | sort | uniq | grep -i "$2"`
-            IFS=$'\n'
-            for title in $title_list; do
-                grep -h "$title" $all_tracks | print_track | sort -k 2
-            done
-			unset IFS
-		;;
-        *)
-            printf %s\\n "not recognized"
-	    ;;
-    esac 
+		
+	# TODO we need to get the input instead of $all_tracks (if available)
+	cat $all_tracks | _inner_search "$@"
 }
 
 case "$1" in
@@ -139,7 +162,8 @@ case "$1" in
 		refresh "$2"
 		;;
     search)
-        search "$2" "$3"
+		shift 1
+        search "$@"
         ;;
     add)
         add
