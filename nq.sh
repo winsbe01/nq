@@ -141,6 +141,10 @@ search() {
 	cat $all_tracks | _inner_search "$@"
 }
 
+shadd() {
+	cat | shuf | add
+}
+
 case "$1" in
 	"")
 		stat
@@ -175,6 +179,9 @@ case "$1" in
 		;;
 	listall)
 		listall
+		;;
+	shadd)
+		shadd
 		;;
     *)
         printf %s\\n "not recognized"
