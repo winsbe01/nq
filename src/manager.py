@@ -25,10 +25,8 @@ class NqManager:
 			fil.writelines(queue)
 
 	def get_queue(self):
-		print(self.config.queuefile)
 		with open(self.config.queuefile, 'r') as fil:
 			lines = fil.readlines()
-			print(lines)
 		if not lines:
 			return None
 		ret = lines.pop(0).strip('\n').split(';;')
