@@ -1,6 +1,8 @@
 from pathlib import Path
 import hashlib
+import logging
 
+nqlog = logging.getLogger("nq")
 
 class SpotifyLibrary:
 
@@ -17,18 +19,18 @@ class SpotifyLibrary:
         self.generate_ids_and_tracks_files()
 
     def get_all_saved_tracks(self):
-        print("getting all Spotify tracks...")
+		nqlog.info("getting all Spotify tracks...")
         all_tracks = []
         tracks = self.spotify_obj.current_user_saved_tracks()
         while tracks is not None:
             for track in tracks['items']:
                 all_tracks.append(track)
             tracks = self.spotify_obj.next(tracks)
-        print("...done! {} tracks found".format(str(len(all_tracks))))
+		nqlog.info("...found {} tracks".format(str(len(all_tracks))))
         return all_tracks
 
     def generate_ids_and_tracks_files(self):
-        print("generating Spotify ids and tracks files...")
+		nqlog.info("generating Spotify library files...")
         if self.spotify_ids_file.exists():
             open(self.spotify_ids_file, 'w').close()
         if self.spotify_tracks_file.exists():
@@ -44,5 +46,6 @@ class SpotifyLibrary:
                         t['track']['album']['name'],
                         str(t['track']['track_number']).zfill(2),
                         t['track']['name']))
+		nqlog.info("...done creating Spotify library files")
 
 
