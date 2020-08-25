@@ -1,7 +1,7 @@
 
 all_ids="$HOME/.config/nq/*.ids"
 all_tracks="$HOME/.config/nq/*.tracks"
-queue="$HOME/.config/nq/queue"
+queuedir="$HOME/.config/nq"
 
 play() {
     echo "play" | nc localhost 55555
@@ -20,17 +20,34 @@ next() {
 }
 
 add() {
+	case "$1" in
+		"")
+			out=$queuedir"/queue"
+			;;
+		*)
+			out=$queuedir"/$1"
+			;;
+	esac
+
     while read line; do
-        grep -h "^`echo $line | cut -d ' ' -f 1`" $all_ids >> $queue
+        grep -h "^`echo $line | cut -d ' ' -f 1`" $all_ids >> $out
     done
 }
 
 addf() {
+    case "$1" in
+        "")
+            out=$queuedir"/queue"
+            ;;
+        *)
+            out=$queuedir"/$1"
+            ;;
+    esac
 	tmpfile=$(mktemp)
-	cp $queue $tmpfile
-	clr
-	cat | add
-	cat $tmpfile | add
+	cp $out $tmpfile
+	clr "$1"
+	cat | add "$1"
+	cat $tmpfile | add "$1"
 	rm "$tmpfile"
 }
 
@@ -54,34 +71,48 @@ stat() {
 	grep -h $song_id $all_tracks | print_track
 }
 
-read_queue() {
+show() {
+    case "$1" in
+        "")
+            out=$queuedir"/queue"
+            ;;
+        *)
+            out=$queuedir"/$1"
+            ;;
+    esac
+
 	while read line; do
 		grep -h `echo $line | cut -d ';' -f 1` $all_tracks | print_track
-	done < $queue
+	done < $out
 }
 
-playlist() {
-	case "$1" in
-		"")
-			read_queue
-			;;
-		edit)
-			tmpfile=$(mktemp)
-			read_queue > $tmpfile
-			"${EDITOR:-nano}" $tmpfile
-			clr
-			cat "$tmpfile" | add
-			echo "queue updated!"
-			rm "$tmpfile"
-			;;
-		*)
-			echo "unknown playlist command: '$1'"
-			;;
-		esac
+edit() {
+	tmpfile=$(mktemp)
+	show "$1" > $tmpfile
+	"${EDITOR:-nano}" $tmpfile
+	clr "$1"
+	cat "$tmpfile" | add "$1"
+    case "$1" in
+        "")
+            echo "queue updated!"
+            ;;
+        *)
+            echo "'$1' updated!"
+            ;;
+    esac
+	rm "$tmpfile"
 }
 
 clr() {
-	> $queue
+    case "$1" in
+        "")
+            out=$queuedir"/queue"
+            ;;
+        *)
+            out=$queuedir"/$1"
+            ;;
+    esac
+	> $out
 }
 
 print_track() {
@@ -151,7 +182,7 @@ search() {
 }
 
 shadd() {
-	cat | shuf | add
+	cat | shuf | add "$1"
 }
 
 case "$1" in
@@ -178,22 +209,25 @@ case "$1" in
         search "$@"
         ;;
     add)
-        add
+        add "$2"
         ;;
-	playlist)
-		playlist "$2"
-		;;
+    edit)
+        edit "$2"
+        ;;
+    show)
+        show "$2"
+        ;;
 	clear)
-		clr
+		clr "$2"
 		;;
 	listall)
 		listall
 		;;
 	shadd)
-		shadd
+		shadd "$2"
 		;;
 	addf)
-		addf
+		addf "$2"
 		;;
     *)
         printf %s\\n "not recognized"
