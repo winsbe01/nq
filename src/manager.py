@@ -1,6 +1,7 @@
 import spotipy
 import spotipy.util as sutil
 from threading import Thread
+import logging
 
 from config import NqConfig
 from player import SongStatus
@@ -9,6 +10,7 @@ from local_library import LocalLibrary
 from spotify_player import SpotifyPlayer
 from spotify_library import SpotifyLibrary
 
+nqlog = logging.getLogger("nq")
 
 class NqManager:
 
@@ -44,10 +46,10 @@ class NqManager:
 
 		# if we get one, return a spotify object
 		if token:
-			print("my spotify is authorized")
+			nqlog.info("Spotify authorized")
 			return spotipy.Spotify(auth=token)
 		else:
-			print("no token :(")
+			nqlog.warning("Spotify failed to authorize!")
 			return None
 
 	def refresh_spotify_library(self):
@@ -68,7 +70,6 @@ class NqManager:
 		self.player.skip()
 	
 	def play(self):
-		#self.next_track, queue = self.get_queue()
 		self.is_playing = True
 
 		if self.current_track is None:
@@ -91,9 +92,11 @@ class NqManager:
 			pthread.join()
 		
 			if status.name == "stopped":
+				nqlog.debug("song stopped")
 				self.is_playing = False
 				break
 			elif status.name in ("skipped", "done"):
+				nqlog.debug("song skipped or finished")
 				self.current_track, self.queue = self.get_queue()
 				self.write_queue(self.queue)
 				self.player = None
