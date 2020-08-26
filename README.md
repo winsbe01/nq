@@ -23,6 +23,7 @@ on the same playlist.
 (eventually, this will be a Makefile)
 - install the requirements using pip
 - copy *server.config* into ~/.config/nq/
+- create a data directory at ~/.local/share/nq
 - create an app on [your Spotify dashboard](https://developer.spotify.com/dashboard/)
 - populate the client info into the *server.config*
 - start *src/nqd.py*. on your first run, you will be prompted to log in to Spotify. this will be the server, you can fork this to bg.

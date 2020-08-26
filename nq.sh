@@ -1,7 +1,7 @@
 
 all_ids="$HOME/.config/nq/*.ids"
 all_tracks="$HOME/.config/nq/*.tracks"
-queuedir="$HOME/.config/nq"
+datadir="$HOME/.local/share/nq"
 
 play() {
     echo "play" | nc localhost 55555
@@ -22,10 +22,10 @@ next() {
 add() {
 	case "$1" in
 		"")
-			out=$queuedir"/queue"
+			out=$datadir"/queue"
 			;;
 		*)
-			out=$queuedir"/$1"
+			out=$datadir"/lists/$1"
 			;;
 	esac
 
@@ -37,10 +37,10 @@ add() {
 addf() {
     case "$1" in
         "")
-            out=$queuedir"/queue"
+            out=$datadir"/queue"
             ;;
         *)
-            out=$queuedir"/$1"
+            out=$datadir"/lists/$1"
             ;;
     esac
 	tmpfile=$(mktemp)
@@ -74,10 +74,10 @@ stat() {
 show() {
     case "$1" in
         "")
-            out=$queuedir"/queue"
+            out=$datadir"/queue"
             ;;
         *)
-            out=$queuedir"/$1"
+            out=$datadir"/lists/$1"
             ;;
     esac
 
@@ -106,10 +106,10 @@ edit() {
 clr() {
     case "$1" in
         "")
-            out=$queuedir"/queue"
+            out=$datadir"/queue"
             ;;
         *)
-            out=$queuedir"/$1"
+            out=$datadir"/lists/$1"
             ;;
     esac
 	> $out
