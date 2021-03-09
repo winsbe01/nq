@@ -86,6 +86,12 @@ show() {
 	done < $out
 }
 
+lists() {
+    for fil in $(ls $datadir"/lists"); do
+        echo "$fil - $(wc -l $datadir"/lists/"$fil | cut -d ' ' -f 1) songs"
+    done
+}
+
 edit() {
 	tmpfile=$(mktemp)
 	show "$1" > $tmpfile
@@ -223,6 +229,9 @@ case "$1" in
 	listall)
 		listall
 		;;
+    lists)
+        lists
+        ;;
 	shadd)
 		shadd "$2"
 		;;
