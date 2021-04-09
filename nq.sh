@@ -122,7 +122,7 @@ clr() {
 }
 
 print_track() {
-    awk -F';;' '{ print substr($1,1,8) "  " $2 "/" $3 "/" $4 " - " $5 }'
+    awk -F';;' '{ print substr($1,1,8) "  " $2 "/" $3 "/" $4 " - " $5 " (" int($6/60) ":" sprintf("%02d",$6%60) ")"}'
 }
 
 listall() {

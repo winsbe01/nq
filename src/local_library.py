@@ -33,8 +33,10 @@ class LocalLibrary:
                     if edo is None:
                         print("object can't load: " + str(id_record[2]))
                     else:
+
                         tag = edo.tag
-					
+                        seconds = int(edo.info.time_secs)
+
                         if tag:
 
                             if tag.album_artist not in ("", None):
@@ -46,7 +48,8 @@ class LocalLibrary:
                                         artist,
                                         tag.album,
                                         str(tag.track_num[0]).zfill(2),
-                                        tag.title))
+                                        tag.title,
+                                        seconds))
                         else:
                             print("no tag!")
                             #tracks_fil.write(self.format_string.format(id_record[0],"","","","",""))
