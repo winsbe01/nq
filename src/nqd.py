@@ -30,7 +30,10 @@ class NqHandler(socketserver.StreamRequestHandler):
 				Thread(target=mgr.play).start()
 		elif str_data == "status":
 			nqlog.info("user ->	`status`")
-			self.wfile.write(mgr.status()[0].encode())
+			if mgr.status():
+				self.wfile.write(mgr.status()[0].encode())
+			else:
+				self.wfile.write(b"")
 		elif str_data == "spotify_refresh":
 			nqlog.info("user -> `refresh spotify`")
 			Thread(target=mgr.refresh_spotify_library).start()

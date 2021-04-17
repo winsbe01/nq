@@ -68,7 +68,14 @@ refresh() {
 
 stat() {
     song_id=`echo "status" | nc localhost 55555`
-	grep -h $song_id $all_tracks | print_track
+	case "$song_id" in
+		"")
+			echo "nothing currently playing"
+			;;
+		*)
+			grep -h $song_id $all_tracks | print_track
+			;;
+	esac
 }
 
 show() {
