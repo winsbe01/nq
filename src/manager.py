@@ -25,12 +25,13 @@ class NqManager:
 	def write_queue(self, queue):
 		with open(self.config.queuefile, 'w') as fil:
 			fil.writelines(queue)
+		nqlog.info("items in queue: " + str(len(queue)))
 
 	def get_queue(self):
 		with open(self.config.queuefile, 'r') as fil:
 			lines = fil.readlines()
 		if not lines:
-			return None
+			return None, []
 		ret = lines.pop(0).strip('\n').split(';;')
 		return ret, lines
 
@@ -78,6 +79,8 @@ class NqManager:
 
 		while True:
 			if self.player is None:
+				if not self.current_track:
+					break
 				if self.current_track[1] == "LOCAL":
 					self.player = LocalPlayer(self.current_track[2])
 				elif self.current_track[1] == "SPOTIFY":
